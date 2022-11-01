@@ -28,6 +28,7 @@
     "passport": "^0.5.2",
     "passport-local": "^1.0.0",
     "passport-local-mongoose": "^7.0.0",
+    "pdf.js-extract": "^0.2.0",
     "react-router-dom": "^6.3.0"
   }
 }

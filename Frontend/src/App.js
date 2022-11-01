@@ -14,7 +14,6 @@ import CustomerProfile from './Components/Customer/CustomerProfile/CustomerProfi
 import DistributorLogin from './Components/Distributor/DistributorLogin.js';
 import DistributorRegister from './Components/Distributor/DistributorRegister.js';
 import DistributorProfile from './Components/Distributor/DistributorProfile/DistributorProfile.js';
-
 import InitializeContract from './Components/Payments/InitializeContract';
 import CancelOrder from './Components/Payments/CancelOrder';
 import ConfirmRecipt from './Components/Payments/ConfirmRecipt';
@@ -56,7 +55,7 @@ function App() {
           <Route path="/viewProducts" element={<ViewProductss/>} /> 
           <Route path="/cart" element={<CheckoutPage/>} /> 
 
-
+    
           <Route path="/initializeContract" element={<InitializeContract />} />
           <Route path="/cancelOrder" element={<CancelOrder />} />
           <Route path="/confirmRecipt" element={<ConfirmRecipt />} />
