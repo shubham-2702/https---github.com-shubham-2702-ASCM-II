@@ -1,11 +1,16 @@
 import React, { useState,useEffect } from 'react'
 import './FarmerProfile.css'
 import jwt_decode from "jwt-decode";
-import {useNavigate,Link} from 'react-router-dom'
+import {useNavigate,Link, useParams } from 'react-router-dom'
 import axios from 'axios'
 import useFetch from "react-fetch-hook"
 import Product from './Product.js'
 import img2 from '../../../assets/img/gallery/logo-icon.png'
+import detectEthereumProvider from "@metamask/detect-provider";
+import { loadContract } from "../../../utils/loadContract";
+import Web3 from "web3";
+import { farmerContractAbi, farmerContractAddress } from "../StoreAbi";
+import CreateProduct from '../CreateProduct/CreateProduct';
 
 
 function check_cookie_name(name)  // "token"
@@ -19,55 +24,116 @@ function check_cookie_name(name)  // "token"
   }
 }
 
-const FarmerProfile = () => {
+let provider;
+let web3;
+let farmer;
+var decoded;
+
+const FarmerProfile = ({route,navigate}) => {
   const [products, setProducts] = useState(null);
  const [loading, setLoading] = useState(true);
  const [error, setError] = useState(null);
-  const navigate = useNavigate()
-  var decoded = jwt_decode(check_cookie_name("token"))
-  console.log(decoded)
+ const [account,setAccount] = useState(null);
+ const [name,setName] = useState(null);
+ const [phone,setPhone] = useState(null);
+ const [mail,setMail] = useState(null);
+ const [add,setAdd] = useState(null);
+  // var decoded = jwt_decode(check_cookie_name("token"))
+  // console.log(decoded)
+  const setAccountListener = (provider) => {
+    provider.on("accountsChanged", (accounts) => {
+      setAccount(accounts[0]);
+      localStorage.setItem('account',account);
+      console.log(accounts[0]);
+    });
+  };
+  useEffect(() => {
+    const loadProvider = async () => {
+      provider = await detectEthereumProvider();
+     
+      if (provider) {
+        setAccountListener(provider);
+        provider.request({method: "eth_requestAccounts"});
+      } else {
+        console.error("Please install MetaMask!");
+      }
+      if (typeof web3 !== 'undefined') {
+        web3 = new Web3(web3.currentProvider);
+    } else {
+        // set the provider you want from Web3.providers
+        web3 = new Web3(provider);
+    }
+    // const accounts = await web3.eth.getAccounts();
+    // console.log(accounts);
+    // setAccount(accounts[0]);
+    // console.log(account);
+    setAccount(localStorage.getItem('account'));
+    console.log(account);
+     farmer = new web3.eth.Contract(
+      farmerContractAbi,
+      farmerContractAddress
+    );
+    console.log(farmer);
+    //  farmer = await loadContract("Farmer", provider);
+    //  console.log(farmer.address);
+    decoded = await farmer.methods.farmer_map(account).call();
+    console.log(decoded);
+    console.log(decoded.typeof);
+    setName(decoded[1]);
+    console.log(name);
+    setPhone(decoded[6]);
+    console.log(phone);
+    setMail(decoded[7]);
+    console.log(mail);
+    setAdd(decoded[5]);
+    console.log(add);
+    };
   
-  
+    loadProvider();
+
+  }, [account]);
 
   // if(decoded == null){
   //   navigate('/farmerRegister')
   //   navigate(0)
   // }
+  useNavigate();
+  
   const submitLogout = (e) => {
     e.preventDefault()
 
-    axios.post('http://localhost:5000/logout')
-      .then(response => {
-        console.log(response)
-        navigate('/')
-        navigate(0)
-        // console.log(formData);
-      })
-      .catch(err => {
-          console.log(err);
-    })
+    // axios.post('http://localhost:5000/logout')
+    //   .then(response => {
+    //     console.log(response)
+    //     navigate('/')
+    //     navigate(0)
+    //     // console.log(formData);
+    //   })
+    //   .catch(err => {
+    //       console.log(err);
+    // })
 
   }
 
-  useEffect(() => {
-    axios.get(`http://localhost:5000/products/farmerProducts`,{
-      withCredentials: true
-    })
-      .then((actualData) => {
-        //setProducts(actualData);
-        console.log('hey')
-        setProducts(actualData.data.response);
-        console.log(actualData.data.response);
-        setError(null);
-      })
-      .catch((err) => {
-        setError(err.message);
-        setProducts(null);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  }, []);
+  // useEffect(() => {
+  //   axios.get(`http://localhost:5000/products/farmerProducts`,{
+  //     withCredentials: true
+  //   })
+  //     .then((actualData) => {
+  //       //setProducts(actualData);
+  //       console.log('hey')
+  //       setProducts(actualData.data.response);
+  //       console.log(actualData.data.response);
+  //       setError(null);
+  //     })
+  //     .catch((err) => {
+  //       setError(err.message);
+  //       setProducts(null);
+  //     })
+  //     .finally(() => {
+  //       setLoading(false);
+  //     });
+  // }, []);
 
   return (
     <div id="farmer-profile">
@@ -126,7 +192,8 @@ const FarmerProfile = () => {
                       <h6 class="mb-0">Full Name</h6>
                     </div>
                     <div class="col-sm-9 text-secondary">
-                    {decoded.name}
+                    {name}
+                    {/* name */}
                     </div>
                   </div>
                   <hr/>
@@ -135,7 +202,8 @@ const FarmerProfile = () => {
                       <h6 class="mb-0">Email</h6>
                     </div>
                     <div class="col-sm-9 text-secondary">
-                    {decoded.email}
+                    {mail}
+                    {/* email */}
                     </div>
                   </div>
                   <hr/>
@@ -144,7 +212,8 @@ const FarmerProfile = () => {
                       <h6 class="mb-0">Phone</h6>
                     </div>
                     <div class="col-sm-9 text-secondary">
-                    {decoded.contactNumber}
+                    {phone}
+                    {/* contactNumber */}
                     </div>
                   </div>
                   <hr/>
@@ -153,7 +222,8 @@ const FarmerProfile = () => {
                       <h6 class="mb-0">Address</h6>
                     </div>
                     <div class="col-sm-9 text-secondary">
-                    {decoded.address}
+                    {add}
+                    {/* address */}
                     </div>
                   </div>
                   <hr/>
@@ -186,7 +256,7 @@ const FarmerProfile = () => {
                       </div>
                   
               <Link to="/farmerCreateProduct">
-              <button >Add Products</button>
+              <button>Add Products</button>
               </Link>    
                 </div>
                 </div>
