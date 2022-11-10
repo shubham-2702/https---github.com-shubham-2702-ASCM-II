@@ -6,6 +6,8 @@ import "./customer.sol";
 import "./distributor.sol";
 contract Farmer is Product,Distributor{
     uint farmer_count;
+
+    //event farmerDetails(uint[] memory _products, address _customerAddress,address _farmerAddress);
     struct farmer{
         uint farmer_id;
         string farmer_name;
@@ -15,12 +17,13 @@ contract Farmer is Product,Distributor{
         string farmer_location;
         string farmer_phone;
         string farmer_email;
-        product[] farmer_product;
+        uint256[] farmer_product;
     }
     //address[] farmerAddress;
     //mapping for all products of farmer using it's address
     //mapping(address=>product[]) farmers_products_map;
     mapping(address=>farmer) public farmer_map;
+    //event farmerDetails()
     // constructor(){
     //     farmer storage f= farmer_map[msg.sender];
     //     f.farmer_add=msg.sender;
@@ -39,6 +42,7 @@ contract Farmer is Product,Distributor{
         f.farmer_phone=_phone;
         f.farmer_name=_name;
         f.farmer_location=_location;
+        f.farmer_product.push(0);
     }
     //OK
     function setDistributor(address payable _distributorAddress) public
@@ -60,11 +64,12 @@ contract Farmer is Product,Distributor{
             p.product_price=_price;
             p.owner=msg.sender;
             p.product_category=_category;
-            farmer_map[msg.sender].farmer_product.push(p);
+            farmer_map[msg.sender].farmer_product.push(pid);
     }
     //OK
-    function viewProductsFarmer() public view returns (product[] memory)
+    function viewProductsFarmer() public view returns (uint256[] memory)
     {
+       // emit farmerDetails(farmer_map[msg.sender].farmer_product);
         return farmer_map[msg.sender].farmer_product;
     }
 
