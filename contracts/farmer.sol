@@ -67,10 +67,10 @@ contract Farmer is Product,Distributor{
             farmer_map[msg.sender].farmer_product.push(pid);
     }
     //OK
-    function viewProductsFarmer() public view returns (uint256[] memory)
+    function viewProductsFarmer(address _address) public view returns (uint256[] memory)
     {
        // emit farmerDetails(farmer_map[msg.sender].farmer_product);
-        return farmer_map[msg.sender].farmer_product;
+        return farmer_map[_address].farmer_product;
     }
 
     function processOrder(uint[] memory _products, address _customerAddress,address _farmerAddress) public{

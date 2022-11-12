@@ -31,8 +31,13 @@
 	padding: 1rem;
 }
 .products-flexbox-container {
-    display: flex;
-    flex-direction: row;
+	display: flex;
+	flex-wrap: wrap;
+}
+.products-box {
+	flex: 50%; /* or - flex: 0 50% - or - flex-basis: 50% - */
+  /*demo*/
+  margin-bottom: 10px;
 }
 .gutters-sm {
 	margin-right: -8px;

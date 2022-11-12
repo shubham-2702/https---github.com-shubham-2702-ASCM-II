@@ -30,7 +30,7 @@ let farmer;
 var decoded;
 
 const FarmerProfile = ({route,navigate}) => {
-  const [products, setProducts] = useState(null);
+  const [products,setProducts] = useState([]);
  const [loading, setLoading] = useState(true);
  const [error, setError] = useState(null);
  const [account,setAccount] = useState(null);
@@ -38,12 +38,14 @@ const FarmerProfile = ({route,navigate}) => {
  const [phone,setPhone] = useState(null);
  const [mail,setMail] = useState(null);
  const [add,setAdd] = useState(null);
+ const [productId,setProductId] = useState([]);
   // var decoded = jwt_decode(check_cookie_name("token"))
   // console.log(decoded)
   const setAccountListener = (provider) => {
     provider.on("accountsChanged", (accounts) => {
       setAccount(accounts[0]);
       localStorage.setItem('account',account);
+      setProducts([]);
       console.log(accounts[0]);
     });
   };
@@ -63,12 +65,13 @@ const FarmerProfile = ({route,navigate}) => {
         // set the provider you want from Web3.providers
         web3 = new Web3(provider);
     }
-    // const accounts = await web3.eth.getAccounts();
-    // console.log(accounts);
-    // setAccount(accounts[0]);
+   
     // console.log(account);
     setAccount(localStorage.getItem('account'));
     console.log(account);
+      const accounts = await web3.eth.getAccounts();
+      console.log(accounts);
+      setAccount(accounts[0]);
      farmer = new web3.eth.Contract(
       farmerContractAbi,
       farmerContractAddress
@@ -76,7 +79,7 @@ const FarmerProfile = ({route,navigate}) => {
     console.log(farmer);
     //  farmer = await loadContract("Farmer", provider);
     //  console.log(farmer.address);
-    decoded = await farmer.methods.farmer_map(account).call();
+    decoded = await farmer.methods.farmer_map(accounts[0]).call();
     console.log(decoded);
     console.log(decoded.typeof);
     setName(decoded[1]);
@@ -87,18 +90,43 @@ const FarmerProfile = ({route,navigate}) => {
     console.log(mail);
     setAdd(decoded[5]);
     console.log(add);
+    var result = await farmer.methods.viewProductsFarmer(accounts[0]).call();
+    console.log(result);
+    var set = new Set(result);
+    result=Array.from(set);
+    setProductId(result);
+    
+    result.map(getProductDetails);
+
+    console.log(products);
     };
   
     loadProvider();
 
-  }, [account]);
-
+  }, []);
+  window.addEventListener('load', (event) => {
+    setProducts([]);
+});
   // if(decoded == null){
   //   navigate('/farmerRegister')
   //   navigate(0)
   // }
   useNavigate();
   
+  const getProductDetails = async (_id)=>{
+    var temp = products;
+    var res = await farmer.methods.product_map(_id).call()
+    console.log(res)
+
+    temp.push({
+      id: res[0],
+      name: res[1],
+      price: res[2],
+      amount: res[3],
+      category: res[4]
+    });
+    setProducts(temp);
+  }
   const submitLogout = (e) => {
     e.preventDefault()
 
@@ -113,6 +141,12 @@ const FarmerProfile = ({route,navigate}) => {
     //       console.log(err);
     // })
 
+  }
+  const showProduct = () => {
+    console.log(products)
+    return products.map(({name,price,category,amount,id}) => (                     
+      <div className="product-box"><Product name={name} category={category} price={price} quantity={amount} key={id} /></div>
+    ))
   }
 
   // useEffect(() => {
@@ -180,7 +214,6 @@ const FarmerProfile = ({route,navigate}) => {
                     <h6 class="mb-0"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-globe mr-2 icon-inline"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>Authority</h6>
                     <span class="text-secondary"> Kisan ID </span>
                   </li>
-                
                 </ul>
               </div>
             </div>
@@ -193,7 +226,6 @@ const FarmerProfile = ({route,navigate}) => {
                     </div>
                     <div class="col-sm-9 text-secondary">
                     {name}
-                    {/* name */}
                     </div>
                   </div>
                   <hr/>
@@ -203,7 +235,6 @@ const FarmerProfile = ({route,navigate}) => {
                     </div>
                     <div class="col-sm-9 text-secondary">
                     {mail}
-                    {/* email */}
                     </div>
                   </div>
                   <hr/>
@@ -213,7 +244,6 @@ const FarmerProfile = ({route,navigate}) => {
                     </div>
                     <div class="col-sm-9 text-secondary">
                     {phone}
-                    {/* contactNumber */}
                     </div>
                   </div>
                   <hr/>
@@ -229,40 +259,28 @@ const FarmerProfile = ({route,navigate}) => {
                   <hr/>
                   <div class="row">
                     <div class="col-sm-12">
-                    
-                      
-                    
                       <a class="btn btn-info " target="__blank" href="https://www.bootdey.com/snippets/view/profile-edit-data-and-skills">Edit</a>
                     </div>
                   </div>
                 </div>
               </div>
-
-               {/* display products  */}
-
-
-
-                {/* add product */}
                 <div class="farmer-profile-card mb-3">
                 <div class="farmer-profile-card-body">
 
-                <h3 style={{textAlign:"center", marginBottom:"2rem"}}>PRODUCTS</h3>
+                <h3 style={{textAlign:"center", marginBottom:"2rem"}  }>PRODUCTS</h3>
                       {/* fetch products */}
-                 <div class="products-flexbox-container">
-                      {products &&  products.map(({ _id, name, price,category ,quantity}) => (
-                        <Product name={name} category={category} price={price} quantity={quantity}/>
-              
-                       ))}
-                      </div>
+                 <div className="products-flexbox-container">
+                      {showProduct()}
+                  </div>
                   
               <Link to="/farmerCreateProduct">
               <button>Add Products</button>
               </Link>    
                 </div>
                 </div>
-              <div class="row gutters-sm">
+              {/* <div class="row gutters-sm">
               <button  onClick={(e) => submitLogout(e)} type="submit" >Log Out</button>
-              </div>
+              </div> */}
 
             </div>
           </div>

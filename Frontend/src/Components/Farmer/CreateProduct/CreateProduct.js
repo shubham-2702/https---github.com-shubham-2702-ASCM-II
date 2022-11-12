@@ -7,17 +7,18 @@ import jwt_decode from "jwt-decode";
 import detectEthereumProvider from "@metamask/detect-provider";
 import { loadContract } from "../../../utils/loadContract";
 import Web3 from "web3";
+import { farmerContractAbi, farmerContractAddress } from "../StoreAbi";
 
-function check_cookie_name(name)  // "token"
-{
-  var match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
-  if (match) {
-    return (match[2]);
-  }
-  else{
-      return ''
-  }
-}
+// function check_cookie_name(name)  // "token"
+// {
+//   var match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+//   if (match) {
+//     return (match[2]);
+//   }
+//   else{
+//       return ''
+//   }
+// }
 let web3;
 let farmer;
 let provider;
@@ -32,10 +33,11 @@ const CreateProduct = () => {
         owner: ''
     })
     const navigate = useNavigate()
-    const [account, setAccount] = useState(null);
+    const [account, setAccount] = useState(localStorage.getItem('account'));
     const setAccountListener = (provider) => {
     provider.on("accountsChanged", (accounts) => {
       setAccount(accounts[0]);
+      localStorage.setItem('account',accounts[0]);
       console.log(accounts[0]);
     });
   };
@@ -55,10 +57,14 @@ const CreateProduct = () => {
         // set the provider you want from Web3.providers
         web3 = new Web3(provider);
     }
-    const accounts = await web3.eth.getAccounts();
-    setAccount(accounts[0]);
-     farmer = await loadContract("Farmer", provider);
-     console.log(farmer.address);
+    //const accounts = await web3.eth.getAccounts();
+    //setAccount(accounts[0]);
+    console.log(account);
+     farmer =new web3.eth.Contract(
+      farmerContractAbi,
+      farmerContractAddress
+    );
+     console.log(farmer);
     };
 
     loadProvider();
@@ -76,7 +82,11 @@ const CreateProduct = () => {
     console.log(quantity);
     console.log(farmer.address);
     console.log(account);
-    farmer.createProduct(name,price,category,quantity,{from:account,gasLimit:3000000});
+    //farmer.createProduct(name,price,category,quantity,{from:account,gasLimit:3000000});
+    await farmer.methods.createProduct(name,price,category,quantity).send({from: account,gas: 3000000}).then(console.log);
+
+    var result = await farmer.methods.viewProductsFarmer(account).call();
+    console.log(result);
   }
   
 
@@ -120,16 +130,16 @@ const CreateProduct = () => {
     const submitForm = (e) => {
         e.preventDefault()
         createProduct();
-        axios.post('http://localhost:5000/farmerCreateProduct', formData, {withCredentials: true})
-          .then(response => {
-            console.log(response)
-            // navigate('/farmerProfile')
-            // navigate(0)
-            console.log(formData);
-          })
-          .catch(err => {
-              console.log(err);
-          })
+        // axios.post('http://localhost:5000/farmerCreateProduct', formData, {withCredentials: true})
+        //   .then(response => {
+        //     console.log(response)
+        //     // navigate('/farmerProfile')
+        //     // navigate(0)
+        //     console.log(formData);
+        //   })
+        //   .catch(err => {
+        //       console.log(err);
+        //   })
       }
 
       return (

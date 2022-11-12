@@ -2,8 +2,10 @@ import React from 'react'
 import {Card} from 'react-bootstrap'
 
 const Product = (props) => {
+  console.log("Reached Products");
+
   return (
-    <div>
+        <div>
         <Card style={{ width: '12rem' , 	marginRight: '10px'}}>
         <Card.Img variant="top" src="https://5.imimg.com/data5/WT/EQ/BN/SELLER-7734044/fresh-wheat-500x500.png" />
         <Card.Body>
