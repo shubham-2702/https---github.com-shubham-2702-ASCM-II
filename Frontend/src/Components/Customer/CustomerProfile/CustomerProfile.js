@@ -7,16 +7,17 @@ import img2 from '../../../assets/img/gallery/logo-icon.png'
 import detectEthereumProvider from "@metamask/detect-provider";
 import { loadContract } from "../../../utils/loadContract";
 import Web3 from "web3";
-import { customerContractAbi, customerContractAddress } from "../StoreAbi";
+import { customerContractAbi, customerContractAddress, farmerContractAbi, farmerContractAddress } from "../StoreAbi";
 
 
 let provider;
 let web3;
 let customer;
+let farmer;
 var decoded;
-
+var accounts;
 const CustomerProfile = () => {
-  
+  const [farmers,setFarmers] = useState([]);
   const [products,setProducts] = useState([]);
  const [loading, setLoading] = useState(true);
  const [error, setError] = useState(null);
@@ -57,27 +58,42 @@ const CustomerProfile = () => {
     // console.log(account);
     setAccount(localStorage.getItem('account'));
     console.log(account);
-      const accounts = await web3.eth.getAccounts();
+     accounts = await web3.eth.getAccounts();
       console.log(accounts);
       setAccount(accounts[0]);
      customer = new web3.eth.Contract(
       customerContractAbi,
       customerContractAddress
     );
+
+    farmer = new web3.eth.Contract(
+      farmerContractAbi,
+      farmerContractAddress
+    )
+
+    console.log(farmer);
     console.log(customer);
     //  customer = await loadContract("Farmer", provider);
     //  console.log(customer.address);
+    var farmer_count = await farmer.methods.farmer_count().call();
+    //var farmer_addresses = await farmer.methods.farmerAddresses().call();
+
+    for(var i=0;i<farmer_count;i++)
+    {
+      var _address=await farmer.methods.farmerAddresses(i).call();
+      getFarmerNetwork(_address);
+    }
     decoded = await customer.methods.customer_map(accounts[0]).call();
-    console.log(decoded);
-    console.log(decoded.typeof);
+    //console.log(decoded);
+    //console.log(decoded.typeof);
     setName(decoded[1]);
-    console.log(name);
-    setPhone(decoded[6]);
-    console.log(phone);
-    setMail(decoded[7]);
-    console.log(mail);
-    setAdd(decoded[5]);
-    console.log(add);
+    //console.log(name);
+    setPhone(decoded[8]);
+    //console.log(phone);
+    setMail(decoded[6]);
+    //console.log(mail);
+    setAdd(decoded[7]);
+    //console.log(add);
     // var result = await farmer.methods.viewProductsFarmer(accounts[0]).call();
     // console.log(result);
     // var set = new Set(result);
@@ -87,6 +103,9 @@ const CustomerProfile = () => {
     // result.map(getProductDetails);
 
     // console.log(products);
+    var set = new Set(farmers);
+    setFarmers(Array.from(set));
+    console.log(farmers);
     };
   
     loadProvider();
@@ -97,7 +116,40 @@ const CustomerProfile = () => {
 // });
   
   useNavigate();
+  window.addEventListener('load', (event) => {
+    setFarmers([]);
+});
+  const getFarmerNetwork =async(_address)=>{
+    var unit_farmer=await farmer.methods.farmer_map(_address).call();
+    var temp=farmers;
+    //console.log(unit_farmer);
+    var unit_farmer_products = await farmer.methods.viewProductsFarmer(accounts[0]).call();
+    //console.log(unit_farmer_products);
+    var set = new Set(unit_farmer_products);
+    unit_farmer_products=Array.from(set);
+    //setProductId(unit_farmer_products);
+    for(var j=0;j<unit_farmer_products.length;j++)
+    {
+      var _id=unit_farmer_products[j];
+      var res = await farmer.methods.product_map(_id).call()
+      temp.push({
+        name:unit_farmer[1],
+        location: unit_farmer[5],
+        phone: unit_farmer[6],
+        email: unit_farmer[7],
+        address: unit_farmer[2],
+        products: {
+          id: res[0],
+          name: res[1],
+          price: res[2],
+          amount: res[3],
+          category: res[4]
+        }
+      })
+    }
 
+    setFarmers(temp);
+  }
   const submitLogout = (e) => {
     e.preventDefault()
 

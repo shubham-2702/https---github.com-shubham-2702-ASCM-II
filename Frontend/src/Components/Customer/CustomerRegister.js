@@ -74,7 +74,7 @@ const CustomerRegister = () => {
     console.log(location);
     console.log(customer.address);
     console.log(account);
-    await customer.methods.setCustomerDetails(name,location,phone,email).send({from:account,gasLimit:3000000})
+    await customer.methods.setCustomerDetails(name,location,phone,email).send({from:account})
     .then( response =>{
       navigate('/customerProfile',{
         account: account

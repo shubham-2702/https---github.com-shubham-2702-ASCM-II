@@ -2,6 +2,25 @@ export const farmerContractAbi=[
 	{
 		"inputs": [
 			{
+				"internalType": "address",
+				"name": "_address",
+				"type": "address"
+			}
+		],
+		"name": "checkStatusFarmer",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
 				"internalType": "string",
 				"name": "_name",
 				"type": "string"
@@ -23,6 +42,20 @@ export const farmerContractAbi=[
 			}
 		],
 		"name": "createProduct",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "logInFarmer",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "logOutFarmer",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -159,6 +192,19 @@ export const farmerContractAbi=[
 		"type": "function"
 	},
 	{
+		"inputs": [],
+		"name": "farmer_count",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
 		"inputs": [
 			{
 				"internalType": "address",
@@ -207,6 +253,30 @@ export const farmerContractAbi=[
 				"internalType": "string",
 				"name": "farmer_email",
 				"type": "string"
+			},
+			{
+				"internalType": "bool",
+				"name": "isLoggedIn",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "farmerAddresses",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
 			}
 		],
 		"stateMutability": "view",
@@ -320,7 +390,5 @@ export const farmerContractAbi=[
 		"type": "function"
 	}
 ]
-
-
 export const farmerContractAddress =
-  "0xcD108124F5AE3ee1c2229878C7628D6071D59BBd";
+  "0xA5B8BD59bDA1d256754AF9A21409e7779FdFa0aa";
