@@ -77,8 +77,8 @@ const FarmerProfile = ({route,navigate}) => {
       farmerContractAddress
     );
     console.log(farmer);
-    //  farmer = await loadContract("Farmer", provider);
-    //  console.log(farmer.address);
+     //farmer = await loadContract("Farmer", provider);
+     console.log(accounts[0]);
     decoded = await farmer.methods.farmer_map(accounts[0]).call();
     console.log(decoded);
     console.log(decoded.typeof);
@@ -270,7 +270,7 @@ const FarmerProfile = ({route,navigate}) => {
                 <h3 style={{textAlign:"center", marginBottom:"2rem"}  }>PRODUCTS</h3>
                       {/* fetch products */}
                  <div className="products-flexbox-container">
-                      {showProduct()}
+                      {products.length && showProduct()}
                   </div>
                   
               <Link to="/farmerCreateProduct">

@@ -1,44 +1,116 @@
-import React from 'react'
+import React, { useState,useEffect } from 'react'
 import './CustomerProfile.css'
 import jwt_decode from "jwt-decode";
 import {useNavigate,Link} from 'react-router-dom'
 import axios from 'axios'
 import img2 from '../../../assets/img/gallery/logo-icon.png'
+import detectEthereumProvider from "@metamask/detect-provider";
+import { loadContract } from "../../../utils/loadContract";
+import Web3 from "web3";
+import { customerContractAbi, customerContractAddress } from "../StoreAbi";
 
 
+let provider;
+let web3;
+let customer;
+var decoded;
 
-function check_cookie_name(name)  // "token"
-{
-  var match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
-  if (match) {
-    return (match[2]);
-  }
-  else{
-      return ''
-  }
-}
 const CustomerProfile = () => {
-  const navigate = useNavigate()
-  var decoded = jwt_decode(check_cookie_name("token"))
-  console.log(decoded)
-  // if(JSON.stringify(decoded) === JSON.stringify({})){
-  //   navigate('/customerRegister')
-  //   navigate(0)
-  // }
+  
+  const [products,setProducts] = useState([]);
+ const [loading, setLoading] = useState(true);
+ const [error, setError] = useState(null);
+ const [account,setAccount] = useState(null);
+ const [name,setName] = useState(null);
+ const [phone,setPhone] = useState(null);
+ const [mail,setMail] = useState(null);
+ const [add,setAdd] = useState(null);
+ const [productId,setProductId] = useState([]);
+  // var decoded = jwt_decode(check_cookie_name("token"))
+  // console.log(decoded)
+  const setAccountListener = (provider) => {
+    provider.on("accountsChanged", (accounts) => {
+      setAccount(accounts[0]);
+      localStorage.setItem('account',account);
+      setProducts([]);
+      console.log(accounts[0]);
+    });
+  };
+
+  useEffect(() => {
+    const loadProvider = async () => {
+      provider = await detectEthereumProvider();
+     
+      if (provider) {
+        setAccountListener(provider);
+        provider.request({method: "eth_requestAccounts"});
+      } else {
+        console.error("Please install MetaMask!");
+      }
+      if (typeof web3 !== 'undefined') {
+        web3 = new Web3(web3.currentProvider);
+    } else {
+        // set the provider you want from Web3.providers
+        web3 = new Web3(provider);
+    }
+   
+    // console.log(account);
+    setAccount(localStorage.getItem('account'));
+    console.log(account);
+      const accounts = await web3.eth.getAccounts();
+      console.log(accounts);
+      setAccount(accounts[0]);
+     customer = new web3.eth.Contract(
+      customerContractAbi,
+      customerContractAddress
+    );
+    console.log(customer);
+    //  customer = await loadContract("Farmer", provider);
+    //  console.log(customer.address);
+    decoded = await customer.methods.customer_map(accounts[0]).call();
+    console.log(decoded);
+    console.log(decoded.typeof);
+    setName(decoded[1]);
+    console.log(name);
+    setPhone(decoded[6]);
+    console.log(phone);
+    setMail(decoded[7]);
+    console.log(mail);
+    setAdd(decoded[5]);
+    console.log(add);
+    // var result = await farmer.methods.viewProductsFarmer(accounts[0]).call();
+    // console.log(result);
+    // var set = new Set(result);
+    // result=Array.from(set);
+    // setProductId(result);
+    
+    // result.map(getProductDetails);
+
+    // console.log(products);
+    };
+  
+    loadProvider();
+
+  },[]);
+//   window.addEventListener('load', (event) => {
+//     setProducts([]);
+// });
+  
+  useNavigate();
 
   const submitLogout = (e) => {
     e.preventDefault()
 
-    axios.post('http://localhost:5000/logout')
-      .then(response => {
-        console.log(response)
-        // navigate('/')
-        // navigate(0)
-        // console.log(formData);
-      })
-      .catch(err => {
-          console.log(err);
-      })
+    // axios.post('http://localhost:5000/logout')
+    //   .then(response => {
+    //     console.log(response)
+    //     // navigate('/')
+    //     // navigate(0)
+    //     // console.log(formData);
+    //   })
+    //   .catch(err => {
+    //       console.log(err);
+    //   })
   }
 
   return (
@@ -95,7 +167,7 @@ const CustomerProfile = () => {
                     <h6 class="mb-0">Full Name</h6>
                   </div>
                   <div class="col-sm-9 text-secondary">
-                  {decoded.name}
+                  {name}
                   </div>
                 </div>
                 <hr/>
@@ -104,7 +176,7 @@ const CustomerProfile = () => {
                     <h6 class="mb-0">Email</h6>
                   </div>
                   <div class="col-sm-9 text-secondary">
-                  {decoded.email}
+                  {mail}
                   </div>
                 </div>
                 <hr/>
@@ -113,7 +185,7 @@ const CustomerProfile = () => {
                     <h6 class="mb-0">Phone</h6>
                   </div>
                   <div class="col-sm-9 text-secondary">
-                  {decoded.contactNumber}
+                  {phone}
                   </div>
                 </div>
                 <hr/>
@@ -122,7 +194,7 @@ const CustomerProfile = () => {
                     <h6 class="mb-0">Address</h6>
                   </div>
                   <div class="col-sm-9 text-secondary">
-                  {decoded.address}
+                  {add}
                   </div>
                 </div>
                 <hr/>

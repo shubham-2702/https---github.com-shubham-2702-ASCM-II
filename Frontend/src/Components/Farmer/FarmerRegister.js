@@ -12,7 +12,6 @@ import { farmerContractAbi, farmerContractAddress } from "./StoreAbi";
 let web3;
 let farmer;
 let provider;
-var data=0;
 
 const sleep = ms => new Promise(
   resolve => setTimeout(resolve, ms)
@@ -26,6 +25,7 @@ const FarmerRegister = () => {
     address: '',
     password: ''
   })
+  const [contract1,setContract1]=useState(null)
   const [account, setAccount] = useState(null);
   const setAccountListener = (provider) => {
     provider.on("accountsChanged", (accounts) => {
@@ -59,31 +59,15 @@ const FarmerRegister = () => {
       farmerContractAbi,
       farmerContractAddress
     );
-    console.log(farmer);
-    //  farmer = await loadContract("Farmer", provider);
-    //  console.log(farmer.address);
+    // console.log(farmer);
+     //farmer = await loadContract("Farmer", provider);
+     //console.log(farmer.methods);
+     setContract1(farmer);
     };
 
     loadProvider();
   }, []);
-// const farmerContract = async()=>{
-//   //const provider=new Web3.providers.HttpProvider("http://127.0.0.1:7545");
-  // const provider=await detectEthereumProvider();
-  //     if (provider) {
-  //       setAccountListener(provider);
-  //       provider.request({method: "eth_requestAccounts"});
-  //     } else {
-  //       console.error("Please install MetaMask!");
-  //     }
-//   if (typeof web3 !== 'undefined') {
-//     web3 = new Web3(web3.currentProvider);
-// } else {
-//     // set the provider you want from Web3.providers
-//     web3 = new Web3(provider);
-// }
-//  farmer = await loadContract("Farmer", provider);
-//  console.log(farmer.address);
-// }
+
 
 const setDetails = async()=>{
   //const provider=new Web3.providers.HttpProvider("http://127.0.0.1:7545");
@@ -95,12 +79,9 @@ const setDetails = async()=>{
   console.log(email);
   console.log(phone);
   console.log(location);
-  console.log(farmer.address);
-  // await web3.eth.getAccounts().then((accounts)=>{
-  //   var acc=accounts[0];
-  //   console.log(acc);
+  console.log(contract1.methods.setFarmerDetails("a","a","a","a"));
      console.log(account);
-     await farmer.methods.setFarmerDetails(name,location,phone,email).send({from: account,gas: 3000000})
+     await contract1.methods.setFarmerDetails(name,location,phone,email).send({from: account,gas: 3000000})
      .then( response =>{
       navigate('/farmerProfile',{
         account: account
@@ -132,52 +113,35 @@ const setDetails = async()=>{
       ...formData,
       name: e.target.value
     })
-    //console.log(formData)
   }
   const changeEmail = (e) => {
     setFormData({
       ...formData,
       email: e.target.value
     })
-    //console.log(formData)
   }
   const changeContactNumber = (e) => {
     setFormData({
       ...formData,
       contactNumber: e.target.value
     })
-    //console.log(formData)
   }
   const changeAddress = (e) => {
     setFormData({
       ...formData,
       address: e.target.value
     })
-    //console.log(formData)
   }
   const changePassword = (e) => {
     setFormData({
       ...formData,
       password: e.target.value
     })
-    //console.log(formData)
   }
 
   const submitForm = (e) => {
     e.preventDefault()
     setDetails();
-
-    
-    // axios.post('http://localhost:5000/farmerRegister', formData, {withCredentials: true})
-    //   .then(response => {
-    //     console.log(response)
-    //     // navigate('/farmerLogin')
-    //     // navigate(0)
-    //     // console.log(formData);
-    //   })
-    //   .catch(err => {
-    //       console.log(err);
-    //   })
   }
   return ( 
     <div class='farmer-register'>
@@ -192,9 +156,6 @@ const setDetails = async()=>{
                             <li class="nav-item px-2"><a class="nav-link fw-medium" href="#invest">Distributor</a></li>
                             <li class="nav-item px-2"><a class="nav-link fw-medium" href="#contact">Contact </a></li>
                         </ul>
-                        {/* <form class="d-flex">
-                            <button class="btn btn-lg btn-dark bg-gradient order-0" type="submit">Logout</button>
-                        </form> */}
                     </div>
                     <button><a class="nav-link fw-medium" href="">{account} </a></button>
                 </div>
@@ -235,14 +196,7 @@ const setDetails = async()=>{
       <br/>
       
       <br/>
-      {/* <label className="farmer-register-label">
-        <p class="farmer-register-label-txt">CONFIRM PASSWORD</p>
-        <input type="password" class="farmer-register-input"/>
-        <div class="farmer-register-line-box">
-          <div class="farmer-register-line"></div>
-        </div>
-      </label>
-      <br/> */}
+      
       <button className='farmer-register-button' onClick={(e) => submitForm(e)} type="submit">REGISTER</button>
     </form>
    

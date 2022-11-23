@@ -7,6 +7,7 @@ import detectEthereumProvider from "@metamask/detect-provider";
 import { loadContract } from "../../utils/loadContract";
 import Web3 from "web3";
 import img2 from '../../assets/img/gallery/logo-icon.png'
+import { customerContractAbi, customerContractAddress } from "./StoreAbi";
 
 
 let web3;
@@ -48,9 +49,15 @@ const CustomerRegister = () => {
     }
     const accounts = await web3.eth.getAccounts();
     setAccount(accounts[0]);
-     customer = await loadContract("Customer", provider);
-     console.log(customer.address);
-    };
+    localStorage.setItem('account', accounts[0]);
+      customer = new web3.eth.Contract(
+      customerContractAbi,
+      customerContractAddress
+    );
+    console.log(customer);
+    //  customer = await loadContract("Customer", provider);
+    //  console.log(customer.address);
+     };
 
     loadProvider();
   }, []);
@@ -67,7 +74,13 @@ const CustomerRegister = () => {
     console.log(location);
     console.log(customer.address);
     console.log(account);
-    customer.setCustomerDetails(name,location,phone,email,{from:account,gasLimit:3000000});
+    await customer.methods.setCustomerDetails(name,location,phone,email).send({from:account,gasLimit:3000000})
+    .then( response =>{
+      navigate('/customerProfile',{
+        account: account
+      })
+      navigate(0);
+     });;
   }
     const navigate = useNavigate()
       
@@ -106,93 +119,76 @@ const CustomerRegister = () => {
     const submitForm = (e) => {
         e.preventDefault()
         setDetails();
-        axios.post('http://localhost:5000/customerRegister', formData)
-          .then(response => {
-            console.log(response)
-            // navigate('/customerProfile')
-            // navigate(0)
-            // console.log(formData);
-          })
-          .catch(err => {
-              console.log(err);
-        })
+        // axios.post('http://localhost:5000/customerRegister', formData)
+        //   .then(response => {
+        //     console.log(response)
+        //     // navigate('/customerProfile')
+        //     // navigate(0)
+        //     // console.log(formData);
+        //   })
+        //   .catch(err => {
+        //       console.log(err);
+        // })
     }
-  return (
-    <div class='farmer-register'>
-      <nav class="navbar navbar-expand-lg navbar-light fixed-top py-3 bg-light opacity-85" data-navbar-on-scroll="data-navbar-on-scroll">
-                <div class="container"><a class="navbar-brand" href="index.html"><img class="d-inline-block align-top img-fluid" src={img2} alt="" width="50" /><span class="text-theme font-monospace fs-4 ps-2">AgriChain</span></a>
-                    <button class="navbar-toggler collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
-                    <div class="collapse navbar-collapse border-top border-lg-0 mt-4 mt-lg-0" id="navbarSupportedContent">
-                        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                            <li class="nav-item px-2"><a class="nav-link fw-medium active" aria-current="page" href="/">Home</a></li>
-                            <li class="nav-item px-2"><a class="nav-link fw-medium" href="#Opportuanities">Farmer</a></li>
-                            <li class="nav-item px-2"><a class="nav-link fw-medium" href="#testimonial">Customer</a></li>
-                            <li class="nav-item px-2"><a class="nav-link fw-medium" href="#invest">Distributor</a></li>
-                            <li class="nav-item px-2"><a class="nav-link fw-medium" href="#contact">Contact </a></li>
-                        </ul>
-                        {/* <form class="d-flex">
-                            <button class="btn btn-lg btn-dark bg-gradient order-0" type="submit">Logout</button>
-                        </form> */}
-                    </div>
-                </div>
-            </nav>
-            <br></br>
-            <br></br>
-    <form id ="farmer-register-form">
-      <label className="farmer-register-label">
-        <p class="farmer-register-label-txt" name="name">ENTER YOUR NAME</p>
-        <input type="text" onKeyUp={e => changeName(e)} class="farmer-register-input"/>
-        <div class="farmer-register-line-box">
-          <div class="farmer-register-line"></div>
-        </div>
-      </label>
-      <br/>
-      
-      <label className="farmer-register-label">
-        <p class="farmer-register-label-txt" name="email">ENTER YOUR EMAIL</p>
-        <input type="email"  onKeyUp={e => changeEmail(e)} class="farmer-register-input"/>
-        <div class="farmer-register-line-box">
-          <div class="farmer-register-line"></div>
-        </div>
-      </label>
-      <br/>
-      <label className="farmer-register-label">
-        <p class="farmer-register-label-txt" name="contactNumber">ENTER YOUR CONTACT NUMBER</p>
-        <input type="text" onKeyUp={e => changeContactNumber(e)} class="farmer-register-input"/>
-        <div class="farmer-register-line-box">
-          <div class="farmer-register-line"></div>
-        </div>
-      </label>
-      <br/>
-      <label className="farmer-register-label">
-        <p class="farmer-register-label-txt"  name="address">ENTER YOUR ADDERESS</p>
-        <input type="text" onKeyUp={e => changeAddress(e)} class="farmer-register-input"/>
-        <div class="farmer-register-line-box">
-          <div class="farmer-register-line"></div>
-        </div>
-      </label>
-      <br/>
-      <label className="farmer-register-label">
-        <p class="farmer-register-label-txt" name="password">CREATE PASSWORD</p>
-        <input type="password" onKeyUp={e => changePassword(e)} class="farmer-register-input"/>
-        <div class="farmer-register-line-box">
-          <div class="farmer-register-line"></div>
-        </div>
-      </label>
-      <br/>
-      {/* <label className="farmer-register-label">
-        <p class="farmer-register-label-txt">CONFIRM PASSWORD</p>
-        <input type="password" class="farmer-register-input"/>
-        <div class="farmer-register-line-box">
-          <div class="farmer-register-line"></div>
-        </div>
-      </label>
-      <br/> */}
-      <button className='farmer-register-button' onClick={(e) => submitForm(e)} type="submit">REGISTER</button>
-    </form>
-   
-  </div>
-  )
+    return ( 
+      <div class='farmer-register'>
+        <nav class="navbar navbar-expand-lg navbar-light fixed-top py-3 bg-light opacity-85" data-navbar-on-scroll="data-navbar-on-scroll">
+                  <div class="container"><a class="navbar-brand" href="index.html"><img class="d-inline-block align-top img-fluid" src={img2} alt="" width="50" /><span class="text-theme font-monospace fs-4 ps-2">AgriChain</span></a>
+                      <button class="navbar-toggler collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+                      <div class="collapse navbar-collapse border-top border-lg-0 mt-4 mt-lg-0" id="navbarSupportedContent">
+                          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                              <li class="nav-item px-2"><a class="nav-link fw-medium active" aria-current="page" href="/">Home</a></li>
+                              <li class="nav-item px-2"><a class="nav-link fw-medium" href="#Opportuanities">Farmer</a></li>
+                              <li class="nav-item px-2"><a class="nav-link fw-medium" href="#testimonial">Customer</a></li>
+                              <li class="nav-item px-2"><a class="nav-link fw-medium" href="#invest">Distributor</a></li>
+                              <li class="nav-item px-2"><a class="nav-link fw-medium" href="#contact">Contact </a></li>
+                          </ul>
+                      </div>
+                      <button><a class="nav-link fw-medium" href="">{account} </a></button>
+                  </div>
+              </nav>
+      <form id ="farmer-register-form">
+        <label className="farmer-register-label">
+          <p class="farmer-register-label-txt" name="name">ENTER YOUR NAME</p>
+          <input type="text" onKeyUp={e => changeName(e)} class="farmer-register-input"/>
+          <div class="farmer-register-line-box">
+            <div class="farmer-register-line"></div>
+          </div>
+        </label>
+        <br/>
+        
+        <label className="farmer-register-label">
+          <p class="farmer-register-label-txt" name="email">ENTER YOUR EMAIL</p>
+          <input type="email"  onKeyUp={e => changeEmail(e)} class="farmer-register-input"/>
+          <div class="farmer-register-line-box">
+            <div class="farmer-register-line"></div>
+          </div>
+        </label>
+        <br/>
+        <label className="farmer-register-label">
+          <p class="farmer-register-label-txt" name="contactNumber">ENTER YOUR CONTACT NUMBER</p>
+          <input type="text" onKeyUp={e => changeContactNumber(e)} class="farmer-register-input"/>
+          <div class="farmer-register-line-box">
+            <div class="farmer-register-line"></div>
+          </div>
+        </label>
+        <br/>
+        <label className="farmer-register-label">
+          <p class="farmer-register-label-txt"  name="address">ENTER YOUR ADDERESS</p>
+          <input type="text" onKeyUp={e => changeAddress(e)} class="farmer-register-input"/>
+          <div class="farmer-register-line-box ">
+            <div class="farmer-register-line"></div>
+          </div>
+        </label>
+        <br/>
+        
+        <br/>
+        
+        <button className='farmer-register-button' onClick={(e) => submitForm(e)} type="submit">REGISTER</button>
+      </form>
+     
+    </div>
+    )
 }
 
 export default CustomerRegister

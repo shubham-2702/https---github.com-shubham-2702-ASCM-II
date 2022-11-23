@@ -57,7 +57,6 @@ contract Customer is Farmer{
 
     function viewProductsCustomer() public view returns (uint[] memory)
     {
-
         return customer_map[msg.sender].products;
     }
 

@@ -78,8 +78,8 @@ const Home = () => {
                         <h6 class="fw-bold fs-1 heading-color">Connect with farmers</h6>
                         <p class="mt-3 mb-md-0 mb-lg-2">Products from the farmers. The best handpicked items, directly to your home.</p>
                         <h5>Continue as customer</h5>
-                        <a class="btn btn-lg btn-success" style={{ marginRight: `20px`, marginTop: `16px`}} href="#" role="button">Sign up</a>
-                        <a class="btn btn-lg btn-success" href="#" style={{ marginTop: `16px` }} role="button">Login</a>
+                        <a class="btn btn-lg btn-success" style={{ marginRight: `20px`, marginTop: `16px`}} href="/customerRegister" role="button">Sign up</a>
+                        <a class="btn btn-lg btn-success" href="/customerProfile" style={{ marginTop: `16px` }} role="button">Login</a>
                       </div>
                     </div>
                   </div>
@@ -91,8 +91,8 @@ const Home = () => {
                         <h6 class="fw-bold fs-1 heading-color">Grow your business</h6>
                         <p class="mt-3 mb-md-0 mb-lg-2">Register yourself with our website and sell your products online, Save expenses and chaos from having middle-men involved.</p>
                         <h5>Continue as farmer</h5>
-                        <a class="btn btn-lg btn-success" style={{ marginRight: `20px`, marginTop: `16px`}} href="#" role="button">Sign up</a>
-                        <a class="btn btn-lg btn-success" style={{ marginTop: `16px` }} href="#" role="button">Login</a>
+                        <a class="btn btn-lg btn-success" style={{ marginRight: `20px`, marginTop: `16px`}} href="/farmerRegister" role="button">Sign up</a>
+                        <a class="btn btn-lg btn-success" style={{ marginTop: `16px` }} href="/farmerProfile" role="button">Login</a>
                       </div>
                     </div>
                   </div>
