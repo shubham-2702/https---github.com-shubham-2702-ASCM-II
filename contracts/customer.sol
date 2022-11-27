@@ -1,11 +1,10 @@
-// SPDX-License-Identifier: MIT
-pragma solidity >=0.4.22 <0.9.0;
+pragma solidity ^0.8.11;
 import "./product.sol";
 import "./farmer.sol";
 //import "./payment.sol";
 contract Customer is Farmer{
-    uint cnt;
-    uint amount;
+    uint public cnt;
+    uint public amount;
     struct customer{
         uint customer_id;
         string customer_name;
@@ -16,6 +15,7 @@ contract Customer is Farmer{
         string email;
         string location;
         string phone;
+        bool isLoggedIn;
         uint[] products;
     }
     
@@ -43,8 +43,20 @@ contract Customer is Farmer{
         c.customer_name=_name;
         c.location=_location;
         c.email=_email;
+        c.isLoggedIn=true;
         // c.product_feedback=_product_feedback; to be set after delivery of the product
         // c.delivery_feedback=_delivery_feedback;
+    }
+     function checkStatusCustomer(address _address) public returns(bool){
+        return customer_map[_address].isLoggedIn;
+    }
+    function logOutCustomer() public{
+        customer storage c= customer_map[msg.sender];
+        c.isLoggedIn=false;
+    }
+    function logInCustomer() public{
+        customer storage c= customer_map[msg.sender];
+        c.isLoggedIn=true;
     }
 
         // function placeOrder(address _to) public
@@ -57,6 +69,7 @@ contract Customer is Farmer{
 
     function viewProductsCustomer() public view returns (uint[] memory)
     {
+        
         return customer_map[msg.sender].products;
     }
 

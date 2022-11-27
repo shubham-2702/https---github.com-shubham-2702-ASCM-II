@@ -5,8 +5,7 @@ import "./order.sol";
 import "./customer.sol";
 import "./distributor.sol";
 contract Farmer is Product,Distributor{
-    uint farmer_count;
-
+    uint public farmer_count;
     //event farmerDetails(uint[] memory _products, address _customerAddress,address _farmerAddress);
     struct farmer{
         uint farmer_id;
@@ -18,11 +17,15 @@ contract Farmer is Product,Distributor{
         string farmer_phone;
         string farmer_email;
         uint256[] farmer_product;
+        bool isLoggedIn;
     }
-    //address[] farmerAddress;
+
+    //struct farmer_network;
+    address[] public farmerAddresses;
     //mapping for all products of farmer using it's address
     //mapping(address=>product[]) farmers_products_map;
     mapping(address=>farmer) public farmer_map;
+    //mapping(uint => farmer) public farmer_id_map;
     //event farmerDetails()
     // constructor(){
     //     farmer storage f= farmer_map[msg.sender];
@@ -37,14 +40,31 @@ contract Farmer is Product,Distributor{
         {
             farmer_count++;
             f.farmer_id=farmer_count;
+            farmerAddresses.push(msg.sender);
+            //farmer_id_map[f.farmer_id]=msg.sender;
         }
         f.farmer_email=_email;
         f.farmer_phone=_phone;
         f.farmer_name=_name;
         f.farmer_location=_location;
-        f.farmer_product.push(0);
+        //f.farmer_product.push(0);
+        f.isLoggedIn=true;
+        //farmer_id_map[f.farmer_id]=f;
     }
     //OK
+    function checkStatusFarmer(address _address) public returns(bool){
+        return farmer_map[_address].isLoggedIn;
+    }
+
+    function logOutFarmer() public{
+        farmer storage f= farmer_map[msg.sender];
+        f.isLoggedIn=false;
+    }
+
+    function logInFarmer() public{
+        farmer storage f= farmer_map[msg.sender];
+        f.isLoggedIn=true;
+    }
     function setDistributor(address payable _distributorAddress) public
     {
         farmer storage f= farmer_map[msg.sender];
