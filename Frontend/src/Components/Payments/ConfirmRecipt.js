@@ -3,6 +3,7 @@ import img2 from '../../assets/img/gallery/logo-icon.png'
 import './InitializeContract.css'
 import detectEthereumProvider from "@metamask/detect-provider";
 import { loadContract } from "../../utils/loadContract";
+import { paymentContractAbi,paymentContractAddress} from "./StoreAbi";
 import Web3 from "web3";
 
 
@@ -40,8 +41,12 @@ const ConfirmRecipt = () => {
         setAccount(accounts[0]);
         // const bal=web3.eth.getBalance(web3.eth.accounts[0]);
         // setBalance(bal);
-        payment = await loadContract("Payment", provider);
-         console.log(payment.address);
+        // payment = await loadContract("Payment", provider);
+        //  console.log(payment.address);
+        payment = new web3.eth.Contract(
+            paymentContractAbi,
+            paymentContractAddress
+          )
         //  const balance =web3.eth.getBalance(payment.address);
         //  console.log(balance);
         };
@@ -51,7 +56,7 @@ const ConfirmRecipt = () => {
       const confirmReceipt=async()=>{
 
             console.log(account);
-            await payment.releaseBalanceToSeller(
+            await payment.methods.itemRecieved("Order Recieved").send(
             {
                 from:account,
                 gasLimit:3000000
@@ -60,6 +65,7 @@ const ConfirmRecipt = () => {
             console.log("Amount transferred to Seller");
             
    }
+   
     return (
         <div style={{ marginTop: `10px` }}>
 
@@ -69,10 +75,11 @@ const ConfirmRecipt = () => {
                     <div class="collapse navbar-collapse border-top border-lg-0 mt-4 mt-lg-0" id="navbarSupportedContent">
                         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                             <li class="nav-item px-2"><a class="nav-link fw-medium active" aria-current="page" href="/">Home</a></li>
-                            <li class="nav-item px-2"><a class="nav-link fw-medium" href="#contact">Initialize Contract </a></li>
-                            <li class="nav-item px-2"><a class="nav-link fw-medium" href="#Opportuanities">Confirm Recipt</a></li>
-                            <li class="nav-item px-2"><a class="nav-link fw-medium" href="#testimonial">Return Item</a></li>
-                            <li class="nav-item px-2"><a class="nav-link fw-medium" href="#invest">Cancel Order</a></li>
+                            <li class="nav-item px-2"><a class="nav-link fw-medium" href="/initializeContract">Initialize Contract </a></li>
+                            <li class="nav-item px-2"><a class="nav-link fw-medium" href="/confirmRecipt">Confirm Recipt</a></li>
+                            <li class="nav-item px-2"><a class="nav-link fw-medium" href="/returnItem">Return Item</a></li>
+                            <li class="nav-item px-2"><a class="nav-link fw-medium" href="/cancelOrder">Cancel Order</a></li>
+                            <li class="nav-item px-2"><a class="nav-link fw-medium" href="/releaseAmount">Release Amount</a></li>
                         </ul>
                         <form class="d-flex">
                             <button class="btn btn-lg btn-dark bg-gradient order-0" type="submit">Logout</button>

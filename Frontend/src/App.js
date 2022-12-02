@@ -18,7 +18,10 @@ import InitializeContract from './Components/Payments/InitializeContract';
 import CancelOrder from './Components/Payments/CancelOrder';
 import ConfirmRecipt from './Components/Payments/ConfirmRecipt';
 import ReturnItem from './Components/Payments/ReturnItem';
+import ReleaseAmount from './Components/Payments/releaseAmount';
+import Rating from './Components/Payments/Rating';
 
+import AddVehicles from './Components/Distributor/AddVehicles/AddVehicles';
 import jwt_decode from "jwt-decode";
 import * as bst from "bootstrap/dist/css/bootstrap.min.css";
 import React from "react";
@@ -31,38 +34,42 @@ function App() {
 
   console.log(decoded);
   return (
-    <Router> 
+    <Router>
       <div className="App">
-      
-        <Navbar/> 
-        <br/>
+        <Navbar />
+        <br />
         <Routes>
-          <Route exact path="/" element={<Home/>} />
+          <Route exact path="/" element={<Home />} />
 
-          <Route  path="/farmerLogin" element={<FarmerLogin/>} />
-          <Route  path="/farmerRegister" element={<FarmerRegister/>} />
-          <Route  path="/farmerProfile" element={<FarmerProfile/>} />
-          <Route  path="/farmerCreateProduct" element={<CreateProduct/>} />
-          
-          <Route  path="/customerLogin" element={<CustomerLogin/>} />
-          <Route  path="/customerRegister" element={<CustomerRegister/>} />
-          <Route  path="/customerProfile" element={<CustomerProfile/>} />
+          <Route path="/farmerLogin" element={<FarmerLogin />} />
+          <Route path="/farmerRegister" element={<FarmerRegister />} />
+          <Route path="/farmerProfile" element={<FarmerProfile />} />
+          <Route path="/farmerCreateProduct" element={<CreateProduct />} />
 
-          <Route  path="/distributorLogin" element={<DistributorLogin/>} />
-          <Route  path="/distributorRegister" element={<DistributorRegister/>} />
-          <Route  path="/distributorProfile" element={<DistributorProfile/>} />
-          <Route path="/viewProduct" element={<ViewProduct/>} />
-          <Route path="/viewProducts" element={<ViewProductss/>} /> 
-          <Route path="/cart" element={<CheckoutPage/>} /> 
+          <Route path="/customerLogin" element={<CustomerLogin />} />
+          <Route path="/customerRegister" element={<CustomerRegister />} />
+          <Route path="/customerProfile" element={<CustomerProfile />} />
 
-    
+          <Route path="/distributorLogin" element={<DistributorLogin />} />
+          <Route
+            path="/distributorRegister"
+            element={<DistributorRegister />}
+          />
+          <Route path="/distributorProfile" element={<DistributorProfile />} />
+          <Route path="/viewProduct" element={<ViewProduct />} />
+          <Route path="/viewProducts" element={<ViewProductss />} />
+          <Route path="/cart" element={<CheckoutPage />} />
+          <Route path="/addVehicles" element={<AddVehicles />} />
+
           <Route path="/initializeContract" element={<InitializeContract />} />
           <Route path="/cancelOrder" element={<CancelOrder />} />
           <Route path="/confirmRecipt" element={<ConfirmRecipt />} />
           <Route path="/returnItem" element={<ReturnItem />} />
+          <Route path="/releaseAmount" element={<ReleaseAmount />} />
 
-         </Routes>      
-       </div>
+          <Route path="/rating" element={<Rating />} />
+        </Routes>
+      </div>
     </Router>
   );
 }

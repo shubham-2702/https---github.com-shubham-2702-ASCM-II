@@ -57,9 +57,9 @@ const CreateProduct = () => {
         // set the provider you want from Web3.providers
         web3 = new Web3(provider);
     }
-    //const accounts = await web3.eth.getAccounts();
+    const accounts = await web3.eth.getAccounts();
     //setAccount(accounts[0]);
-    console.log(account);
+    console.log(accounts[0]);
      farmer =new web3.eth.Contract(
       farmerContractAbi,
       farmerContractAddress
@@ -130,6 +130,9 @@ const CreateProduct = () => {
     const submitForm = (e) => {
         e.preventDefault()
         createProduct();
+        // navigate('/farmerProfile')
+        // navigate(0)
+
         // axios.post('http://localhost:5000/farmerCreateProduct', formData, {withCredentials: true})
         //   .then(response => {
         //     console.log(response)
@@ -159,19 +162,19 @@ const CreateProduct = () => {
                     </div>
                     <div class="row justify-content-between text-left">
                         <div class="form-group col-sm-6 flex-column d-flex"> <label class="form-control-label farmer-create-product-label px-3">Product Price<span class="text-danger"> *</span></label> 
-                        <input type="text" id="email" onKeyUp={e => changePrice(e)} name="price" placeholder="" className="farmer-create-product-input" onblur="validate(3)"/> </div>
+                        <input type="text" id="email" onKeyUp={e => changePrice(e)} name="price" placeholder="0" className="farmer-create-product-input" onblur="validate(3)"/> </div>
                         <div class="form-group col-sm-6 flex-column d-flex"> <label class="form-control-label farmer-create-product-label px-3">Product Quantity<span class="text-danger"> *</span></label>
-                         <input type="text" onKeyUp={e => changeQuantity(e)} id="mob" name="quantity" placeholder="" className="farmer-create-product-input" onblur="validate(4)"/> </div>
+                         <input type="text" onKeyUp={e => changeQuantity(e)} id="mob" name="quantity" placeholder="0" className="farmer-create-product-input" onblur="validate(4)"/> </div>
                     </div>
                     <br/>
                     {/* <div class="row justify-content-between text-left">
                         <div class="form-group col-sm-6 flex-column d-flex"> <label class="form-control-label farmer-create-product-label px-3">Job title<span class="text-danger"> *</span></label> <input type="text" id="job" name="job" placeholder="" className="farmer-create-product-input" onblur="validate(5)"/> </div>
                     </div> */}
-                    <div class="row justify-content-between text-left">
+                    {/* <div class="row justify-content-between text-left">
                         <div class="form-group col-12 flex-column d-flex"> <label class="form-control-label farmer-create-product-lebel px-3">Confirm your Email<span class="text-danger"> *</span></label>
                          <input type="text"  onKeyUp={e => changeOwner(e)} id="ans" name="ans" placeholder="" className="farmer-create-product-input" onblur="validate(6)"/> </div>
-                    </div>
-                    <div class="row justify-content-end">
+                    </div> */}
+                    <div class="row justify-content-center">
                         <div class="form-group col-sm-6"> <button  type="submit" onClick={(e) => submitForm(e)}  class="btn-block-farmer-product btn-primary-farmer-product farmer-create-product-button">Create Product</button> </div>
                     </div>
                 </form>

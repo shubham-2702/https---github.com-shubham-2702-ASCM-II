@@ -1,20 +1,26 @@
 import React, {useState,useEffect} from 'react'
+import {Link,useLocation} from 'react-router-dom'
 import img2 from '../../assets/img/gallery/logo-icon.png'
 import './InitializeContract.css'
 import detectEthereumProvider from "@metamask/detect-provider";
 import { loadContract } from "../../utils/loadContract";
+import { paymentContractAbi,paymentContractAddress,customerContractAbi,customerContractAddress } from "./StoreAbi";
 import Web3 from "web3";
 
 
 let web3;
 let payment;
+let customer;
 let provider;
 const InitializeContract = () => {
-
+    const location = useLocation()
+    const { details } = location.state;
+    console.log(details);
     const [account,setAccount]=useState(null);
     //const [balance,setBalance]=useState(0);
-    const [reciever,setReceiver]=useState(null);
-    const [deposit,setDeposit]=useState(0);
+    const [reciever,setReceiver]=useState(details.address);
+    //var value=toString("0.003839")
+    const [deposit,setDeposit]=useState("0.003839");
     const setAccountListener = (provider) => {
         provider.on("accountsChanged", (accounts) => {
           setAccount(accounts[0]);
@@ -42,8 +48,17 @@ const InitializeContract = () => {
         setAccount(accounts[0]);
         // const bal=web3.eth.getBalance(web3.eth.accounts[0]);
         // setBalance(bal);
-        payment = await loadContract("Payment", provider);
-         console.log(payment.address);
+        // payment = await loadContract("Payment", provider);
+        payment = new web3.eth.Contract(
+            paymentContractAbi,
+            paymentContractAddress
+          )
+          customer = new web3.eth.Contract(
+            customerContractAbi,
+            customerContractAddress
+          )
+         console.log(payment);
+         console.log(customer);
         };
     
         loadProvider();
@@ -56,10 +71,27 @@ const InitializeContract = () => {
           //  console.log(balance);
             console.log(reciever);
             console.log(deposit);
-            await payment.initiatePaymentContract(reciever,5000,3000,
-            {
+            await payment.methods.initiatePaymentContract(reciever,"5000","3000").send
+            ({
                 from:account,
                 value:web3.utils.toWei(deposit,"ether"),
+                gasLimit:3000000
+            })
+        // }
+        // else{
+        //     alert("Please Enter Amount less than balance to transfer");
+        // }
+    }
+    const confirmOrder=async()=>{
+        // if(balance>=deposit)
+        // {
+            console.log(account);
+          //  console.log(balance);
+            console.log(reciever);
+            console.log(deposit);
+            await customer.methods.confirmOrder(reciever).send
+            ({
+                from:account,
                 gasLimit:3000000
             })
         // }
@@ -83,10 +115,11 @@ const InitializeContract = () => {
                     <div class="collapse navbar-collapse border-top border-lg-0 mt-4 mt-lg-0" id="navbarSupportedContent">
                         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                             <li class="nav-item px-2"><a class="nav-link fw-medium active" aria-current="page" href="/">Home</a></li>
-                            <li class="nav-item px-2"><a class="nav-link fw-medium" href="#contact">Initialize Contract </a></li>
-                            <li class="nav-item px-2"><a class="nav-link fw-medium" href="#Opportuanities">Confirm Recipt</a></li>
-                            <li class="nav-item px-2"><a class="nav-link fw-medium" href="#testimonial">Return Item</a></li>
-                            <li class="nav-item px-2"><a class="nav-link fw-medium" href="#invest">Cancel Order</a></li>
+                            <li class="nav-item px-2"><a class="nav-link fw-medium" href="/initializeContract">Initialize Contract </a></li>
+                            <li class="nav-item px-2"><a class="nav-link fw-medium" href="/confirmRecipt">Confirm Recipt</a></li>
+                            <li class="nav-item px-2"><a class="nav-link fw-medium" href="/returnItem">Return Item</a></li>
+                            <li class="nav-item px-2"><a class="nav-link fw-medium" href="/cancelOrder">Cancel Order</a></li>
+                            <li class="nav-item px-2"><a class="nav-link fw-medium" href="/releaseAmount">Release Amount</a></li>
                         </ul>
                         <form class="d-flex">
                             <button class="btn btn-lg btn-dark bg-gradient order-0" type="submit">Logout</button>
@@ -120,7 +153,7 @@ const InitializeContract = () => {
                                 <div class="row row-space">
                                     <div >
                                         <div class="input-group">
-                                            <input class="form-control" onKeyUp={e => changeReciever(e)} type="text" placeholder="Seller Address" />
+                                            <input class="form-control" onKeyUp={e => changeReciever(e)} type="text" disabled placeholder={details.address} />
                                         </div>
                                     </div>
                                 </div>
@@ -144,7 +177,7 @@ const InitializeContract = () => {
                                 <div class="row row-space">
                                     <div  >
                                         <div >
-                                             <input class="form-control" type="text" onKeyUp={e => changeDeposit(e)} placeholder="Deposit"/>
+                                             <input class="form-control" type="text" onKeyUp={e => changeDeposit(e)} disabled placeholder={400*0.0000096}ETH/>
                                         </div>
                                     </div>
                                 </div>
@@ -152,13 +185,17 @@ const InitializeContract = () => {
                                 <div class="p-t-30">
                                     <button type="button" class="btn btn-warning" onClick={()=>initiatePayment()}>Initialize Contract</button>
                                 </div>
+
+                                <div class="p-t-30" style= {{justifyContent: `center`, marginLeft: `320px`, marginTop: `50px`}} >
+                                    <button type="button" class="btn btn-success" onClick={()=>confirmOrder()}>Confirm Order</button>
+                                </div>
                             </form>
                         </div>
                     </div>
                 </div>
             </div>
 
-          
+               
 
         </div>
     )

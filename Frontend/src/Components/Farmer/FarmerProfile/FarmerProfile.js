@@ -11,6 +11,7 @@ import { loadContract } from "../../../utils/loadContract";
 import Web3 from "web3";
 import { farmerContractAbi, farmerContractAddress } from "../StoreAbi";
 import CreateProduct from '../CreateProduct/CreateProduct';
+import {Card} from 'react-bootstrap'
 
 
 function check_cookie_name(name)  // "token"
@@ -31,6 +32,7 @@ var decoded;
 
 const FarmerProfile = ({route,navigate}) => {
   const [products,setProducts] = useState([]);
+  //const [data,setData] = useState([]);
  const [loading, setLoading] = useState(true);
  const [error, setError] = useState(null);
  const [account,setAccount] = useState(null);
@@ -76,20 +78,20 @@ const FarmerProfile = ({route,navigate}) => {
       farmerContractAbi,
       farmerContractAddress
     );
-    console.log(farmer);
+    //console.log(farmer);
      //farmer = await loadContract("Farmer", provider);
-     console.log(accounts[0]);
+     //console.log(accounts[0]);
     decoded = await farmer.methods.farmer_map(accounts[0]).call();
-    console.log(decoded);
-    console.log(decoded.typeof);
+    //console.log(decoded);
+    //console.log(decoded.typeof);
     setName(decoded[1]);
-    console.log(name);
+    //console.log(name);
     setPhone(decoded[6]);
-    console.log(phone);
+    //console.log(phone);
     setMail(decoded[7]);
-    console.log(mail);
+    //console.log(mail);
     setAdd(decoded[5]);
-    console.log(add);
+    //console.log(add);
     var result = await farmer.methods.viewProductsFarmer(accounts[0]).call();
     console.log(result);
     var set = new Set(result);
@@ -97,6 +99,7 @@ const FarmerProfile = ({route,navigate}) => {
     setProductId(result);
     
     result.map(getProductDetails);
+      //setData(products);
 
     console.log(products);
     };
@@ -109,24 +112,30 @@ const FarmerProfile = ({route,navigate}) => {
 });
   // if(decoded == null){
   //   navigate('/farmerRegister')
-  //   navigate(0)
+  //   navigate(0) 
   // }
   useNavigate();
+   
   
   const getProductDetails = async (_id)=>{
     var temp = products;
-    var res = await farmer.methods.product_map(_id).call()
-    console.log(res)
-
+    console.log(_id);
+    var res = await farmer.methods.product_map(_id-1).call()
+    //console.log(res)
+ 
     temp.push({
       id: res[0],
       name: res[1],
-      price: res[2],
+      price: res[2],    
       amount: res[3],
       category: res[4]
     });
+    console.log(temp);
     setProducts(temp);
+    console.log(products)
+    //setData(products);
   }
+
   const submitLogout = (e) => {
     e.preventDefault()
 
@@ -142,12 +151,26 @@ const FarmerProfile = ({route,navigate}) => {
     // })
 
   }
-  const showProduct = () => {
-    console.log(products)
-    return products.map(({name,price,category,amount,id}) => (                     
+  var showProduct = products.map(({name, category, price, amount, id}) => {                     
       <div className="product-box"><Product name={name} category={category} price={price} quantity={amount} key={id} /></div>
-    ))
-  }
+    //   <div className="product-box">
+    //     <div>
+    //     <Card style={{ width: '12rem' , 	marginRight: '10px'}}>
+    //     <Card.Img variant="top" src="https://5.imimg.com/data5/WT/EQ/BN/SELLER-7734044/fresh-wheat-500x500.png" />
+    //     <Card.Body>
+    //       <Card.Title>{name}</Card.Title>
+    //       <Card.Text>
+    //          <span><bold>Category: </bold></span>{category} <br/>
+    //          <span><bold>Price: </bold></span>{price} <br/>
+    //          <span><bold>Quantity: </bold></span>{amount} <br/>
+    //     </Card.Text>
+    //       {/* <Button variant="primary">Go somewhere</Button> */}
+    //     </Card.Body>
+    //     </Card>
+    //     <br></br>
+    // </div>
+    //   </div>
+  })
 
   // useEffect(() => {
   //   axios.get(`http://localhost:5000/products/farmerProducts`,{
@@ -169,8 +192,16 @@ const FarmerProfile = ({route,navigate}) => {
   //     });
   // }, []);
 
+  const pt = products.map((product) => 
+  <div key ={product.id}>
+    <h1>{product.name} </h1>
+    <h2>{product.amount}</h2>
+  </div>
+  );
+
   return (
     <div id="farmer-profile">
+    
       <nav class="navbar navbar-expand-lg navbar-light fixed-top py-3 bg-light opacity-85" data-navbar-on-scroll="data-navbar-on-scroll">
                 <div class="container"><a class="navbar-brand" href="index.html"><img class="d-inline-block align-top img-fluid" src={img2} alt="" width="50" /><span class="text-theme font-monospace fs-4 ps-2">AgriChain</span></a>
                     <button class="navbar-toggler collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
@@ -270,7 +301,12 @@ const FarmerProfile = ({route,navigate}) => {
                 <h3 style={{textAlign:"center", marginBottom:"2rem"}  }>PRODUCTS</h3>
                       {/* fetch products */}
                  <div className="products-flexbox-container">
-                      {products.length && showProduct()}
+                      {products.length > 0  && products.map((product,id) => {                     
+       return <div className="product-box"><Product  
+                        details={product} 
+                        key={id}
+        //name={name} category={category} price={price} quantity={amount} key={id} 
+        /></div>})}
                   </div>
                   
               <Link to="/farmerCreateProduct">
@@ -286,7 +322,9 @@ const FarmerProfile = ({route,navigate}) => {
           </div>
 
         </div>
+        {/* {pt} */}
     </div>
+
     </div>
   )
 }

@@ -4,6 +4,7 @@ import './InitializeContract.css'
 import detectEthereumProvider from "@metamask/detect-provider";
 import { loadContract } from "../../utils/loadContract";
 import Web3 from "web3";
+import { paymentContractAbi,paymentContractAddress} from "./StoreAbi";
 
 
 let web3;
@@ -13,6 +14,7 @@ let provider;
 
 const ReturnItem = () => {
         const [account,setAccount]=useState(null);
+        const [feedback,setFeedback]=useState("");
         const setAccountListener = (provider) => {
             provider.on("accountsChanged", (accounts) => {
               setAccount(accounts[0]);
@@ -39,8 +41,12 @@ const ReturnItem = () => {
             setAccount(accounts[0]);
             // const bal=web3.eth.getBalance(web3.eth.accounts[0]);
             // setBalance(bal);
-            payment = await loadContract("Payment", provider);
-             console.log(payment.address);
+            // payment = await loadContract("Payment", provider);
+            //  console.log(payment.address);
+            payment = new web3.eth.Contract(
+                paymentContractAbi,
+                paymentContractAddress
+              )
             };
         
             loadProvider();
@@ -48,12 +54,19 @@ const ReturnItem = () => {
 
           const returnItem=async()=>{
                 console.log(account);
-                // await payment.cancel(
-                // {
-                //     from:account,
-                //     gasLimit:3000000
-                // })
+                await payment.methods.returnItemToSeller(
+                    feedback
+                ).send(
+                {
+                    from:account,
+                    gasLimit:3000000
+                })
             
+        }
+
+        const inputChanged=(e)=>{
+            setFeedback(e.target.value);
+            console.log(feedback);
         }
     return (
         <div style={{ marginTop: `10px` }}>
@@ -64,10 +77,11 @@ const ReturnItem = () => {
                     <div class="collapse navbar-collapse border-top border-lg-0 mt-4 mt-lg-0" id="navbarSupportedContent">
                         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                             <li class="nav-item px-2"><a class="nav-link fw-medium active" aria-current="page" href="/">Home</a></li>
-                            <li class="nav-item px-2"><a class="nav-link fw-medium" href="#contact">Initialize Contract </a></li>
-                            <li class="nav-item px-2"><a class="nav-link fw-medium" href="#Opportuanities">Confirm Recipt</a></li>
-                            <li class="nav-item px-2"><a class="nav-link fw-medium" href="#testimonial">Return Item</a></li>
-                            <li class="nav-item px-2"><a class="nav-link fw-medium" href="#invest">Cancel Order</a></li>
+                            <li class="nav-item px-2"><a class="nav-link fw-medium" href="/initializeContract">Initialize Contract </a></li>
+                            <li class="nav-item px-2"><a class="nav-link fw-medium" href="/confirmRecipt">Confirm Recipt</a></li>
+                            <li class="nav-item px-2"><a class="nav-link fw-medium" href="/returnItem">Return Item</a></li>
+                            <li class="nav-item px-2"><a class="nav-link fw-medium" href="/cancelOrder">Cancel Order</a></li>
+                            <li class="nav-item px-2"><a class="nav-link fw-medium" href="/releaseAmount">Release Amount</a></li>
                         </ul>
                         <form class="d-flex">
                             <button class="btn btn-lg btn-dark bg-gradient order-0" type="submit">Logout</button>
@@ -90,7 +104,7 @@ const ReturnItem = () => {
                                 <div class="row row-space">
                                     <div style={{ marginBottom: `20px` }}>
                                         <div>
-                                            <h5>Coinbase Address: </h5>
+                                            <h5>Coinbase Address:{account} </h5>
                                             <br />
                                             {/* <h5>Coinbase Balance: </h5> */}
                                         </div>
@@ -101,7 +115,7 @@ const ReturnItem = () => {
                                 <div class="row row-space">
                                     <div >
                                         <div class="input-group">
-                                            <input class="form-control" type="text" placeholder="Feedback" />
+                                            <input class="form-control" type="text" onChange={inputChanged} placeholder="Feedback" />
                                         </div>
                                     </div>
                                 </div>
