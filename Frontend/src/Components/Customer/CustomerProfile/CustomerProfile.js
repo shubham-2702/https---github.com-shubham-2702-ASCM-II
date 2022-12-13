@@ -303,7 +303,7 @@ const CustomerProfile = () => {
         {/* -------------------------------- */}
       </div>
       </div>
-    </div>
+    </div> 
     </div>
 
      

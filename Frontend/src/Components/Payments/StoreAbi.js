@@ -822,4 +822,6 @@ export const customerContractAbi=[
 	}
 ]
 export const customerContractAddress =
-  "0xeE6C9410Ac24af02baD8cC7E45C2316Cf44e4Fff";
+  "0x28054d601918d389Df1CC3c2780aAbA3735F1F25";
+
+ 

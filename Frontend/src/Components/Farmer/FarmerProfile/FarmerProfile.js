@@ -112,7 +112,7 @@ const FarmerProfile = ({route,navigate}) => {
 });
   // if(decoded == null){
   //   navigate('/farmerRegister')
-  //   navigate(0) 
+  //   navigate(0)  
   // }
   useNavigate();
    

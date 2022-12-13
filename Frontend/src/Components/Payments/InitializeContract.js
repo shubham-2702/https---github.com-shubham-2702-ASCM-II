@@ -12,6 +12,9 @@ let web3;
 let payment;
 let customer;
 let provider;
+let accounts;
+let order_price;
+
 const InitializeContract = () => {
     const location = useLocation()
     const { details } = location.state;
@@ -20,7 +23,7 @@ const InitializeContract = () => {
     //const [balance,setBalance]=useState(0);
     const [reciever,setReceiver]=useState(details.address);
     //var value=toString("0.003839")
-    const [deposit,setDeposit]=useState("0.003839");
+    const [deposit,setDeposit]=useState(0);
     const setAccountListener = (provider) => {
         provider.on("accountsChanged", (accounts) => {
           setAccount(accounts[0]);
@@ -44,11 +47,13 @@ const InitializeContract = () => {
             // set the provider you want from Web3.providers
             web3 = new Web3(provider);
         }
-        const accounts = await web3.eth.getAccounts();
+        accounts = await web3.eth.getAccounts();
         setAccount(accounts[0]);
+        console.log(accounts);
         // const bal=web3.eth.getBalance(web3.eth.accounts[0]);
         // setBalance(bal);
         // payment = await loadContract("Payment", provider);
+        var BN = web3.utils.BN;
         payment = new web3.eth.Contract(
             paymentContractAbi,
             paymentContractAddress
@@ -57,6 +62,15 @@ const InitializeContract = () => {
             customerContractAbi,
             customerContractAddress
           )
+           order_price=await customer.methods.order_price_map(accounts[0]).call();
+          console.log(order_price);
+          order_price=order_price*0.0000095;
+          setDeposit(order_price*0.0000095);
+          order_price=order_price.toString();
+          console.log(order_price);
+          //console.log(deposit);
+          setDeposit(deposit.toString());
+          //console.log(deposit);
          console.log(payment);
          console.log(customer);
         };
@@ -73,8 +87,8 @@ const InitializeContract = () => {
             console.log(deposit);
             await payment.methods.initiatePaymentContract(reciever,"5000","3000").send
             ({
-                from:account,
-                value:web3.utils.toWei(deposit,"ether"),
+                from:accounts[0],
+                value:web3.utils.toWei(order_price,"ether"),
                 gasLimit:3000000
             })
         // }
@@ -93,7 +107,7 @@ const InitializeContract = () => {
             ({
                 from:account,
                 gasLimit:3000000
-            })
+            }).then(console.log("Order Completed!!"));
         // }
         // else{
         //     alert("Please Enter Amount less than balance to transfer");
@@ -177,7 +191,7 @@ const InitializeContract = () => {
                                 <div class="row row-space">
                                     <div  >
                                         <div >
-                                             <input class="form-control" type="text" onKeyUp={e => changeDeposit(e)} disabled placeholder={400*0.0000096}ETH/>
+                                             <input class="form-control" type="text" onKeyUp={e => changeDeposit(e)} disabled placeholder={order_price}ETH/>
                                         </div>
                                     </div>
                                 </div>

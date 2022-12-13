@@ -78,7 +78,7 @@ const ProductView = (props) => {
     const addToCart= async ()=>{
         // console.log(props.key);
         // console.log(props.details.address);
-        await customer.methods.addProduct(props.id,quantity,props.details.address).send({from:accounts[0],gas:300000}).then(console.log);
+        await customer.methods.addProduct(props.id-1,quantity,props.details.address).send({from:accounts[0],gas:300000}).then(console.log);
         var order_price = await customer.methods.order_price_map(accounts[0]).call();
         console.log(order_price);
     }
