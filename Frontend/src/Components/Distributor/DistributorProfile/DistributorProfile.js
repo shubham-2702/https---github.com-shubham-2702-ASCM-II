@@ -212,7 +212,7 @@ const DistributorProfile = ({ route, navigate }) => {
               alt=""
               width="50"
             />
-            <span class="text-theme font-monospace fs-4 ps-2">AgriChain</span>
+            <span class="text-theme font-monospace fs-4 ps-2">BSFRA</span>
           </a>
           <button
             class="navbar-toggler collapsed"

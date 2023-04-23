@@ -26,7 +26,7 @@ const Home = () => {
            
  
       <nav class="navbar navbar-expand-lg navbar-light fixed-top py-3 bg-light opacity-85" data-navbar-on-scroll="data-navbar-on-scroll">
-        <div class="container"><a class="navbar-brand" href="index.html"><img class="d-inline-block align-top img-fluid" src={img2} alt="" width="50" /><span class="text-theme font-monospace fs-4 ps-2">AgriChain</span></a>
+        <div class="container"><a class="navbar-brand" href="index.html"><img class="d-inline-block align-top img-fluid" src={img2} alt="" width="50" /><span class="text-theme font-monospace fs-4 ps-2">BSFRA</span></a>
           <button class="navbar-toggler collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
           <div class="collapse navbar-collapse border-top border-lg-0 mt-4 mt-lg-0" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
@@ -49,7 +49,7 @@ const Home = () => {
             <div class="row align-items-center min-vh-75 min-vh-lg-100">
               <div class="col-md-7 col-lg-6 col-xxl-5 py-6 text-sm-start text-center" style={{marginTop: `80px`}}>
                 <h1 class="mt-6 mb-sm-4 fw-semi-bold " style={{marginTop: `50px`}}>A New Way to Invest <br class="d-block d-lg-block" />in Agriculture</h1>
-                <p class="mb-4 fs-4" style={{marginTop: `40px` , marginBottom: `50px`}}>AgriChain provides farmers,<br></br> ranchers, private foresters, <br></br>and agricultural producers with<br></br> online self service applications.<br></br></p><a class="btn btn-lg btn-success" href="#" role="button">Invest Now</a>
+                <p class="mb-4 fs-4" style={{marginTop: `40px` , marginBottom: `50px`}}>BSFRA provides farmers,<br></br> ranchers, private foresters, <br></br>and agricultural producers with<br></br> online self service applications.<br></br></p><a class="btn btn-lg btn-success" href="#" role="button">Invest Now</a>
               </div>
             </div>
           </div>
@@ -173,7 +173,7 @@ const Home = () => {
               <div class="bg-holder" style={{backgroundImage: `url(${img17})` , backgroundPosition:'top left',backgroundSize:'120px 83px'}}>
               </div>
 
-              <h6 class="fs-3 fs-lg-4 fw-bold lh-sm">What investors like you <br />are saying about AgriChain</h6>
+              <h6 class="fs-3 fs-lg-4 fw-bold lh-sm">What investors like you <br />are saying about BSFRA</h6>
             </div>
             <div class="carousel slide pt-3" id="carouselExampleDark" data-bs-ride="carousel">
               <div class="carousel-inner">
@@ -323,7 +323,7 @@ const Home = () => {
             <div class="col-12">
               <div class="card shadow h-100 py-5">
                 <div class="card-body text-center">
-                  <h1 class="fw-semi-bold mb-4">The future of &nbsp;<span class="text-success">Farm Investing</span> &nbsp; is AgriChain</h1><a class="btn btn-lg btn-success px-6" href="#" role="button">Invest Now</a>
+                  <h1 class="fw-semi-bold mb-4">The future of &nbsp;<span class="text-success">Farm Investing</span> &nbsp; is BSFRA</h1><a class="btn btn-lg btn-success px-6" href="#" role="button">Invest Now</a>
                 </div>
               </div>
             </div>

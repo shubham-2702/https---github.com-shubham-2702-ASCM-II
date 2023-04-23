@@ -124,7 +124,7 @@ const InitializeContract = () => {
         <div style={{ marginTop: `10px` }}>
 
             <nav class="navbar navbar-expand-lg navbar-light fixed-top py-3 bg-light opacity-85" data-navbar-on-scroll="data-navbar-on-scroll">
-                <div class="container"><a class="navbar-brand" href="index.html"><img class="d-inline-block align-top img-fluid" src={img2} alt="" width="50" /><span class="text-theme font-monospace fs-4 ps-2">AgriChain</span></a>
+                <div class="container"><a class="navbar-brand" href="index.html"><img class="d-inline-block align-top img-fluid" src={img2} alt="" width="50" /><span class="text-theme font-monospace fs-4 ps-2">BSFRA</span></a>
                     <button class="navbar-toggler collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
                     <div class="collapse navbar-collapse border-top border-lg-0 mt-4 mt-lg-0" id="navbarSupportedContent">
                         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
@@ -150,7 +150,7 @@ const InitializeContract = () => {
                             <h2 class="title"> Initialize Contract</h2>
                             <form method="POST">
                                 <div >
-                                    <p style={{fontSize: `18px`}}> <mark >Here Customer sets up the AgriChain contract</mark></p>
+                                    <p style={{fontSize: `18px`}}> <mark >Here Customer sets up the BSFRA contract</mark></p>
                                     <br></br>
                                 </div>
                                 <div class="row row-space">
